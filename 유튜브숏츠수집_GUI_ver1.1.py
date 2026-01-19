@@ -623,14 +623,14 @@ class MainDialog(QDialog):
                     # 유튜브 검색필터 추가 (새 UI: 구분 → 길이 → 업로드날짜)
                     for i in range(2) :
                         # i=0: 업로드 날짜 필터 (선택안함이면 건너뜀)
-                        # i=1: 길이 필터 (항상 적용)
+                        # i=1: Shorts 동영상 필터 (항상 적용)
                         if i == 0 and udfilter_check_1 == True :
                             continue
 
                         if i == 0 :
                             search_txt = ud_text
                         if i == 1 :
-                            search_txt = '3분 미만'
+                            search_txt = 'Shorts 동영상'
 
                         filter_c_tag = driver.find_element(By.CSS_SELECTOR, ".yt-spec-button-shape-next.yt-spec-button-shape-next--text.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-trailing.yt-spec-button-shape-next--enable-backdrop-filter-experiment")
                         filter_c_tag.click()
@@ -642,7 +642,7 @@ class MainDialog(QDialog):
                         if i == 0 :
                             rst_filter_tags = filter_tags[8:12]  # 업로드 날짜
                         if i == 1 :
-                            rst_filter_tags = filter_tags[5:8]   # 길이
+                            rst_filter_tags = filter_tags[0:5]   # 구분 (Shorts 동영상)
 
                         for rst_filter_tag in rst_filter_tags :
                             current_tag = rst_filter_tag.find_element(By.CSS_SELECTOR, "#label")
