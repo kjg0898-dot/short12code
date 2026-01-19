@@ -84,11 +84,12 @@ class MainDialog(QDialog):
 
         self.udfilter_btn_1.setChecked(True)
 
-        # 우선순위 필터 라디오 버튼 그룹화 (관련성/인기도)
+        # 우선순위 필터 라디오 버튼 그룹화 (선택안함/관련성/인기도)
         self.priority_button_group = QButtonGroup(self)
+        self.priority_button_group.addButton(self.priority_btn_0)
         self.priority_button_group.addButton(self.priority_btn_1)
         self.priority_button_group.addButton(self.priority_btn_2)
-        self.priority_btn_1.setChecked(True)
+        self.priority_btn_0.setChecked(True)
 
 
         self.layout = QVBoxLayout(self.scrollArea)
@@ -184,14 +185,19 @@ class MainDialog(QDialog):
             except:
                 self.exl_path_btn.setText('')
 
-            # 우선순위 필터 로드 (관련성/인기도)
+            # 우선순위 필터 로드 (선택안함/관련성/인기도)
             try:
-                if lines[14].strip() == "True":
+                priority_val = lines[14].strip()
+                if priority_val == "0":
+                    self.priority_btn_0.setChecked(True)
+                elif priority_val == "1":
                     self.priority_btn_1.setChecked(True)
-                else:
+                elif priority_val == "2":
                     self.priority_btn_2.setChecked(True)
+                else:
+                    self.priority_btn_0.setChecked(True)
             except:
-                self.priority_btn_1.setChecked(True)
+                self.priority_btn_0.setChecked(True)
 
         if os.path.exists(setting_file_2):
 
@@ -256,8 +262,13 @@ class MainDialog(QDialog):
 
         exl_path = self.exl_path_btn.text()
 
-        # 우선순위 필터 (관련성/인기도)
-        priority_filter = self.priority_btn_1.isChecked()
+        # 우선순위 필터 (선택안함/관련성/인기도)
+        if self.priority_btn_0.isChecked():
+            priority_filter = "0"
+        elif self.priority_btn_1.isChecked():
+            priority_filter = "1"
+        else:
+            priority_filter = "2"
 
         with open(setting_file_1, 'w') as file:
             file.write(str(udfilter_1) + '\n')
@@ -275,7 +286,7 @@ class MainDialog(QDialog):
             file.write(str(rd_time_start) + '\n')
             file.write(str(rd_time_end) + '\n')
             file.write(str(exl_path) + '\n')
-            file.write(str(priority_filter))  # 우선순위 필터
+            file.write(priority_filter)  # 우선순위 필터
 
         channel_ecp_keywords = self.cnname_except_btn.toPlainText() # 추출 키워드
 
@@ -458,7 +469,8 @@ class MainDialog(QDialog):
             udfilter_check_5 = self.udfilter_btn_5.isChecked()  # 이번 달
             udfilter_check_6 = self.udfilter_btn_6.isChecked()  # 올해
 
-            # 우선순위 필터 (관련성/인기도)
+            # 우선순위 필터 (선택안함/관련성/인기도)
+            priority_check_0 = self.priority_btn_0.isChecked()  # 선택안함
             priority_check_1 = self.priority_btn_1.isChecked()  # 관련성
             priority_check_2 = self.priority_btn_2.isChecked()  # 인기도
 
@@ -475,8 +487,10 @@ class MainDialog(QDialog):
             # 우선순위 텍스트 설정
             if priority_check_1:
                 priority_text = '관련성'
-            else:
+            elif priority_check_2:
                 priority_text = '인기도'
+            else:
+                priority_text = ''
 
 
             # 유효성 검사
@@ -654,8 +668,9 @@ class MainDialog(QDialog):
                     if udfilter_check_1 == False:
                         filter_steps.append({'search_txt': ud_text, 'range': (8, 12)})
 
-                    # 2. 우선순위 필터 (관련성/인기도)
-                    filter_steps.append({'search_txt': priority_text, 'range': (23, 25)})
+                    # 2. 우선순위 필터 (선택안함이면 스킵)
+                    if priority_check_0 == False:
+                        filter_steps.append({'search_txt': priority_text, 'range': (23, 25)})
 
                     for step in filter_steps:
                         search_txt = step['search_txt']
