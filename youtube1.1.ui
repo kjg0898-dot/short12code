@@ -533,7 +533,7 @@ border: 1px solid #8183ff;</string>
                  <cursorShape>PointingHandCursor</cursorShape>
                 </property>
                 <property name="text">
-                 <string>지난 1시간</string>
+                 <string>오늘</string>
                 </property>
                 <property name="autoExclusive">
                  <bool>false</bool>
@@ -558,7 +558,7 @@ border: 1px solid #8183ff;</string>
                  <cursorShape>PointingHandCursor</cursorShape>
                 </property>
                 <property name="text">
-                 <string>오늘</string>
+                 <string>이번 주</string>
                 </property>
                 <property name="autoExclusive">
                  <bool>false</bool>
@@ -587,7 +587,7 @@ border: 1px solid #8183ff;</string>
                  <cursorShape>PointingHandCursor</cursorShape>
                 </property>
                 <property name="text">
-                 <string>이번 주</string>
+                 <string>이번 달</string>
                 </property>
                 <property name="autoExclusive">
                  <bool>false</bool>
@@ -612,7 +612,7 @@ border: 1px solid #8183ff;</string>
                  <cursorShape>PointingHandCursor</cursorShape>
                 </property>
                 <property name="text">
-                 <string>이번 달</string>
+                 <string>올해</string>
                 </property>
                 <property name="autoExclusive">
                  <bool>false</bool>
@@ -623,21 +623,24 @@ border: 1px solid #8183ff;</string>
                <widget class="QRadioButton" name="udfilter_btn_6">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>0</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>16777215</width>
-                  <height>30</height>
+                  <width>0</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="cursor">
                  <cursorShape>PointingHandCursor</cursorShape>
                 </property>
                 <property name="text">
-                 <string>올해</string>
+                 <string></string>
+                </property>
+                <property name="visible">
+                 <bool>false</bool>
                 </property>
                 <property name="autoExclusive">
                  <bool>false</bool>
@@ -1381,7 +1384,7 @@ color:rgb(255, 255, 255)</string>
          </font>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;개발문의 :☏ 02-2135-6240&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;개발문의 : 진건&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
