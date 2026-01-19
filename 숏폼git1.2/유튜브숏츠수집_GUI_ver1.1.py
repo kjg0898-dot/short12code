@@ -84,12 +84,6 @@ class MainDialog(QDialog):
 
         self.udfilter_btn_1.setChecked(True)
 
-        # 구분 필터 라디오 버튼 그룹화 (동영상/Shorts 동영상)
-        self.gubun_button_group = QButtonGroup(self)
-        self.gubun_button_group.addButton(self.gubun_btn_1)
-        self.gubun_button_group.addButton(self.gubun_btn_2)
-        self.gubun_btn_1.setChecked(True)
-
         # 우선순위 필터 라디오 버튼 그룹화 (관련성/인기도)
         self.priority_button_group = QButtonGroup(self)
         self.priority_button_group.addButton(self.priority_btn_1)
@@ -190,18 +184,9 @@ class MainDialog(QDialog):
             except:
                 self.exl_path_btn.setText('')
 
-            # 구분 필터 로드 (동영상/Shorts 동영상)
-            try:
-                if lines[14].strip() == "True" :
-                    self.gubun_btn_1.setChecked(True)
-                else:
-                    self.gubun_btn_2.setChecked(True)
-            except:
-                self.gubun_btn_1.setChecked(True)
-
             # 우선순위 필터 로드 (관련성/인기도)
             try:
-                if lines[15].strip() == "True":
+                if lines[14].strip() == "True":
                     self.priority_btn_1.setChecked(True)
                 else:
                     self.priority_btn_2.setChecked(True)
@@ -271,9 +256,6 @@ class MainDialog(QDialog):
 
         exl_path = self.exl_path_btn.text()
 
-        # 구분 필터 (동영상/Shorts 동영상)
-        gubun_filter = self.gubun_btn_1.isChecked()
-
         # 우선순위 필터 (관련성/인기도)
         priority_filter = self.priority_btn_1.isChecked()
 
@@ -293,7 +275,6 @@ class MainDialog(QDialog):
             file.write(str(rd_time_start) + '\n')
             file.write(str(rd_time_end) + '\n')
             file.write(str(exl_path) + '\n')
-            file.write(str(gubun_filter) + '\n')  # 구분 필터
             file.write(str(priority_filter))  # 우선순위 필터
 
         channel_ecp_keywords = self.cnname_except_btn.toPlainText() # 추출 키워드
@@ -477,10 +458,6 @@ class MainDialog(QDialog):
             udfilter_check_5 = self.udfilter_btn_5.isChecked()  # 이번 달
             udfilter_check_6 = self.udfilter_btn_6.isChecked()  # 올해
 
-            # 구분 필터 (동영상/Shorts 동영상)
-            gubun_check_1 = self.gubun_btn_1.isChecked()  # 동영상
-            gubun_check_2 = self.gubun_btn_2.isChecked()  # Shorts 동영상
-
             # 우선순위 필터 (관련성/인기도)
             priority_check_1 = self.priority_btn_1.isChecked()  # 관련성
             priority_check_2 = self.priority_btn_2.isChecked()  # 인기도
@@ -494,12 +471,6 @@ class MainDialog(QDialog):
                 ud_text = '이번 달'
             if udfilter_check_6 :
                 ud_text = '올해'
-
-            # 구분 텍스트 설정
-            if gubun_check_1:
-                gubun_text = '동영상'
-            else:
-                gubun_text = 'Shorts 동영상'
 
             # 우선순위 텍스트 설정
             if priority_check_1:
@@ -675,18 +646,15 @@ class MainDialog(QDialog):
                     time.sleep(5)
 
                     # 유튜브 검색필터 추가 (새로운 UI 구조에 맞게 수정)
-                    # 필터 순서: 구분(0-4), 길이(5-7), 업로드날짜(8-11), 기능별(12-22), 우선순위(23-24)
+                    # 필터 순서: 업로드날짜(8-11), 우선순위(23-24)
 
                     filter_steps = []
 
-                    # 1. 구분 필터 (동영상/Shorts 동영상)
-                    filter_steps.append({'search_txt': gubun_text, 'range': (0, 5)})
-
-                    # 2. 업로드 날짜 필터 (선택안함이면 스킵)
+                    # 1. 업로드 날짜 필터 (선택안함이면 스킵)
                     if udfilter_check_1 == False:
                         filter_steps.append({'search_txt': ud_text, 'range': (8, 12)})
 
-                    # 4. 우선순위 필터 (관련성/인기도)
+                    # 2. 우선순위 필터 (관련성/인기도)
                     filter_steps.append({'search_txt': priority_text, 'range': (23, 25)})
 
                     for step in filter_steps:
