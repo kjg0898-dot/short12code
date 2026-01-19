@@ -74,16 +74,34 @@ class MainDialog(QDialog):
         pm = pm.scaledToWidth(220)
         self.yj_image_btn.setPixmap(pm)
 
-        # 업로드날짜 필터 라디오 버튼 그룹화
+        # 업로드날짜 필터 라디오 버튼 그룹화 (지난 1시간 제거됨)
         self.ud_button_group = QButtonGroup(self)
         self.ud_button_group.addButton(self.udfilter_btn_1)
-        self.ud_button_group.addButton(self.udfilter_btn_2)
         self.ud_button_group.addButton(self.udfilter_btn_3)
         self.ud_button_group.addButton(self.udfilter_btn_4)
         self.ud_button_group.addButton(self.udfilter_btn_5)
         self.ud_button_group.addButton(self.udfilter_btn_6)
 
         self.udfilter_btn_1.setChecked(True)
+
+        # 구분 필터 라디오 버튼 그룹화 (동영상/Shorts 동영상)
+        self.gubun_button_group = QButtonGroup(self)
+        self.gubun_button_group.addButton(self.gubun_btn_1)
+        self.gubun_button_group.addButton(self.gubun_btn_2)
+        self.gubun_btn_1.setChecked(True)
+
+        # 길이 필터 라디오 버튼 그룹화 (3분 미만/3~20분/20분 초과)
+        self.length_button_group = QButtonGroup(self)
+        self.length_button_group.addButton(self.length_btn_1)
+        self.length_button_group.addButton(self.length_btn_2)
+        self.length_button_group.addButton(self.length_btn_3)
+        self.length_btn_1.setChecked(True)
+
+        # 우선순위 필터 라디오 버튼 그룹화 (관련성/인기도)
+        self.priority_button_group = QButtonGroup(self)
+        self.priority_button_group.addButton(self.priority_btn_1)
+        self.priority_button_group.addButton(self.priority_btn_2)
+        self.priority_btn_1.setChecked(True)
 
 
         self.layout = QVBoxLayout(self.scrollArea)
@@ -113,16 +131,13 @@ class MainDialog(QDialog):
             with open(setting_file_1, 'r') as file:
                 lines = file.readlines()
 
+            # 업로드 날짜 필터 (지난 1시간 제거됨 - 인덱스 조정)
             try:
                 if lines[0].strip() == "True" :
                     self.udfilter_btn_1.setChecked(True)
             except :
                 pass
-            try:
-                if lines[1].strip() == "True" :
-                    self.udfilter_btn_2.setChecked(True)
-            except :
-                pass
+            # lines[1]은 이제 사용하지 않음 (지난 1시간 제거)
             try:
                 if lines[2].strip() == "True" :
                     self.udfilter_btn_3.setChecked(True)
@@ -182,6 +197,35 @@ class MainDialog(QDialog):
             except:
                 self.exl_path_btn.setText('')
 
+            # 구분 필터 로드 (동영상/Shorts 동영상)
+            try:
+                if lines[14].strip() == "True" :
+                    self.gubun_btn_1.setChecked(True)
+                else:
+                    self.gubun_btn_2.setChecked(True)
+            except:
+                self.gubun_btn_1.setChecked(True)
+
+            # 길이 필터 로드 (3분 미만/3~20분/20분 초과)
+            try:
+                if lines[15].strip() == "1":
+                    self.length_btn_1.setChecked(True)
+                elif lines[15].strip() == "2":
+                    self.length_btn_2.setChecked(True)
+                elif lines[15].strip() == "3":
+                    self.length_btn_3.setChecked(True)
+            except:
+                self.length_btn_1.setChecked(True)
+
+            # 우선순위 필터 로드 (관련성/인기도)
+            try:
+                if lines[16].strip() == "True":
+                    self.priority_btn_1.setChecked(True)
+                else:
+                    self.priority_btn_2.setChecked(True)
+            except:
+                self.priority_btn_1.setChecked(True)
+
         if os.path.exists(setting_file_2):
 
             with open(setting_file_2, 'r') as file:
@@ -226,7 +270,7 @@ class MainDialog(QDialog):
     def setting_save(self) :
 
         udfilter_1 = self.udfilter_btn_1.isChecked()
-        udfilter_2 = self.udfilter_btn_2.isChecked()
+        # udfilter_2 제거됨 (지난 1시간 옵션 삭제)
         udfilter_3 = self.udfilter_btn_3.isChecked()
         udfilter_4 = self.udfilter_btn_4.isChecked()
         udfilter_5 = self.udfilter_btn_5.isChecked()
@@ -245,9 +289,23 @@ class MainDialog(QDialog):
 
         exl_path = self.exl_path_btn.text()
 
+        # 구분 필터 (동영상/Shorts 동영상)
+        gubun_filter = self.gubun_btn_1.isChecked()
+
+        # 길이 필터 (3분 미만/3~20분/20분 초과)
+        if self.length_btn_1.isChecked():
+            length_filter = "1"
+        elif self.length_btn_2.isChecked():
+            length_filter = "2"
+        else:
+            length_filter = "3"
+
+        # 우선순위 필터 (관련성/인기도)
+        priority_filter = self.priority_btn_1.isChecked()
+
         with open(setting_file_1, 'w') as file:
             file.write(str(udfilter_1) + '\n')
-            file.write(str(udfilter_2) + '\n')
+            file.write('False\n')  # 지난 1시간 제거됨 (호환성 유지)
             file.write(str(udfilter_3) + '\n')
             file.write(str(udfilter_4) + '\n')
             file.write(str(udfilter_5) + '\n')
@@ -260,7 +318,10 @@ class MainDialog(QDialog):
             file.write(str(wishsubcnt_end) + '\n')
             file.write(str(rd_time_start) + '\n')
             file.write(str(rd_time_end) + '\n')
-            file.write(str(exl_path))
+            file.write(str(exl_path) + '\n')
+            file.write(str(gubun_filter) + '\n')  # 구분 필터
+            file.write(str(length_filter) + '\n')  # 길이 필터
+            file.write(str(priority_filter))  # 우선순위 필터
 
         channel_ecp_keywords = self.cnname_except_btn.toPlainText() # 추출 키워드
 
@@ -434,17 +495,29 @@ class MainDialog(QDialog):
             rd_time_end = self.delay_end_btn.text()
 
             channel_ecp_keywords = self.cnname_except_btn.toPlainText()
-            title_ecp_keywords = self.title_except_btn.toPlainText() 
+            title_ecp_keywords = self.title_except_btn.toPlainText()
 
-            udfilter_check_1 = self.udfilter_btn_1.isChecked()
-            udfilter_check_2 = self.udfilter_btn_2.isChecked()
-            udfilter_check_3 = self.udfilter_btn_3.isChecked()
-            udfilter_check_4 = self.udfilter_btn_4.isChecked()
-            udfilter_check_5 = self.udfilter_btn_5.isChecked()
-            udfilter_check_6 = self.udfilter_btn_6.isChecked()
+            # 업로드 날짜 필터 (지난 1시간 제거됨)
+            udfilter_check_1 = self.udfilter_btn_1.isChecked()  # 선택안함
+            udfilter_check_3 = self.udfilter_btn_3.isChecked()  # 오늘
+            udfilter_check_4 = self.udfilter_btn_4.isChecked()  # 이번 주
+            udfilter_check_5 = self.udfilter_btn_5.isChecked()  # 이번 달
+            udfilter_check_6 = self.udfilter_btn_6.isChecked()  # 올해
 
-            if udfilter_check_2 :
-                ud_text = '지난 1시간'
+            # 구분 필터 (동영상/Shorts 동영상)
+            gubun_check_1 = self.gubun_btn_1.isChecked()  # 동영상
+            gubun_check_2 = self.gubun_btn_2.isChecked()  # Shorts 동영상
+
+            # 길이 필터 (3분 미만/3~20분/20분 초과)
+            length_check_1 = self.length_btn_1.isChecked()  # 3분 미만
+            length_check_2 = self.length_btn_2.isChecked()  # 3~20분
+            length_check_3 = self.length_btn_3.isChecked()  # 20분 초과
+
+            # 우선순위 필터 (관련성/인기도)
+            priority_check_1 = self.priority_btn_1.isChecked()  # 관련성
+            priority_check_2 = self.priority_btn_2.isChecked()  # 인기도
+
+            ud_text = ''
             if udfilter_check_3 :
                 ud_text = '오늘'
             if udfilter_check_4 :
@@ -453,6 +526,26 @@ class MainDialog(QDialog):
                 ud_text = '이번 달'
             if udfilter_check_6 :
                 ud_text = '올해'
+
+            # 구분 텍스트 설정
+            if gubun_check_1:
+                gubun_text = '동영상'
+            else:
+                gubun_text = 'Shorts 동영상'
+
+            # 길이 텍스트 설정
+            if length_check_1:
+                length_text = '3분 미만'
+            elif length_check_2:
+                length_text = '3~20분'
+            else:
+                length_text = '20분 초과'
+
+            # 우선순위 텍스트 설정
+            if priority_check_1:
+                priority_text = '관련성'
+            else:
+                priority_text = '인기도'
 
 
             # 유효성 검사
@@ -621,41 +714,40 @@ class MainDialog(QDialog):
                     driver.get(link)
                     time.sleep(5)
 
-                    # 유튜브 검색필터 추가
-                    for i in range(3) :
-                        if i == 0 and udfilter_check_1 == True :
-                            continue
-                        if i == 1 and udfilter_check_1 == False :
-                            continue
+                    # 유튜브 검색필터 추가 (새로운 UI 구조에 맞게 수정)
+                    # 필터 순서: 구분(0-4), 길이(5-7), 업로드날짜(8-11), 기능별(12-22), 우선순위(23-24)
 
-                        if i == 0 :
-                            search_txt = ud_text
-                        if i == 1 :
-                            search_txt = '동영상'
-                        if i == 2 :
-                            search_txt = '4분 미만'
+                    filter_steps = []
+
+                    # 1. 구분 필터 (동영상/Shorts 동영상)
+                    filter_steps.append({'search_txt': gubun_text, 'range': (0, 5)})
+
+                    # 2. 길이 필터 (3분 미만/3~20분/20분 초과)
+                    filter_steps.append({'search_txt': length_text, 'range': (5, 8)})
+
+                    # 3. 업로드 날짜 필터 (선택안함이면 스킵)
+                    if udfilter_check_1 == False:
+                        filter_steps.append({'search_txt': ud_text, 'range': (8, 12)})
+
+                    # 4. 우선순위 필터 (관련성/인기도)
+                    filter_steps.append({'search_txt': priority_text, 'range': (23, 25)})
+
+                    for step in filter_steps:
+                        search_txt = step['search_txt']
+                        filter_range = step['range']
 
                         filter_c_tag = driver.find_element(By.CSS_SELECTOR, ".yt-spec-button-shape-next.yt-spec-button-shape-next--text.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-trailing.yt-spec-button-shape-next--enable-backdrop-filter-experiment")
                         filter_c_tag.click()
                         time.sleep(2)
 
                         filter_tags = driver.find_elements(By.CSS_SELECTOR, "ytd-search-filter-renderer")
+                        rst_filter_tags = filter_tags[filter_range[0]:filter_range[1]]
 
-                        if i == 0 :
-                            search_txt = ud_text
-                            rst_filter_tags = filter_tags[:5]
-                        if i == 1 :
-                            search_txt = '동영상'
-                            rst_filter_tags = filter_tags[5:9]
-                        if i == 2 :
-                            search_txt = '4분 미만'
-                            rst_filter_tags = filter_tags[9:12]
-
-                        for rst_filter_tag in rst_filter_tags :
+                        for rst_filter_tag in rst_filter_tags:
                             current_tag = rst_filter_tag.find_element(By.CSS_SELECTOR, "#label")
                             current_text = current_tag.text.strip()
 
-                            if current_text == search_txt :
+                            if current_text == search_txt:
                                 current_tag.click()
                                 time.sleep(3)
                                 break
