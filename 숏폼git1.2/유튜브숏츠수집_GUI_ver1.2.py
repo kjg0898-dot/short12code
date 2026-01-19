@@ -1,4 +1,4 @@
-# pyinstaller -w -F --add-data "youtube1.1.ui;./" 유튜브숏츠수집_GUI_ver1.1.py
+# pyinstaller -w -F --add-data "youtube1.2.ui;./" 유튜브숏츠수집_GUI_ver1.2.py
 
 import os
 import sys
@@ -49,7 +49,7 @@ else:
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-UI_PATH = "youtube1.1.ui"
+UI_PATH = "youtube1.2.ui"
 
 save_date = datetime.today().strftime("%Y%m%d_%H%M")
 favicon_image = program_directory + "\\data\\icon-16x16.png"
@@ -68,7 +68,7 @@ class MainDialog(QDialog):
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMaximizeButtonHint | Qt.WindowMinimizeButtonHint)  # 최소화 버튼
         uic.loadUi(os.path.join(BASE_DIR, UI_PATH), self)
 
-        self.setWindowTitle('유튜브 숏츠 정보수집 프로그램 Ver 1.0')
+        self.setWindowTitle('유튜브 숏츠 정보수집 프로그램 Ver 1.2')
         self.setWindowIcon(QIcon(favicon_image))
         pm = QPixmap(yj_image)
         pm = pm.scaledToWidth(220)
