@@ -444,15 +444,14 @@ class MainDialog(QDialog):
             udfilter_check_6 = self.udfilter_btn_6.isChecked()
 
             if udfilter_check_2 :
-                ud_text = '지난 1시간'
-            if udfilter_check_3 :
                 ud_text = '오늘'
-            if udfilter_check_4 :
+            if udfilter_check_3 :
                 ud_text = '이번 주'
-            if udfilter_check_5 :
+            if udfilter_check_4 :
                 ud_text = '이번 달'
-            if udfilter_check_6 :
+            if udfilter_check_5 :
                 ud_text = '올해'
+            # udfilter_check_6는 새 UI에서 사용하지 않음
 
 
             # 유효성 검사
@@ -621,19 +620,17 @@ class MainDialog(QDialog):
                     driver.get(link)
                     time.sleep(5)
 
-                    # 유튜브 검색필터 추가
-                    for i in range(3) :
+                    # 유튜브 검색필터 추가 (새 UI: 구분 → 길이 → 업로드날짜)
+                    for i in range(2) :
+                        # i=0: 업로드 날짜 필터 (선택안함이면 건너뜀)
+                        # i=1: 길이 필터 (항상 적용)
                         if i == 0 and udfilter_check_1 == True :
-                            continue
-                        if i == 1 and udfilter_check_1 == False :
                             continue
 
                         if i == 0 :
                             search_txt = ud_text
                         if i == 1 :
-                            search_txt = '동영상'
-                        if i == 2 :
-                            search_txt = '4분 미만'
+                            search_txt = '3분 미만'
 
                         filter_c_tag = driver.find_element(By.CSS_SELECTOR, ".yt-spec-button-shape-next.yt-spec-button-shape-next--text.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-trailing.yt-spec-button-shape-next--enable-backdrop-filter-experiment")
                         filter_c_tag.click()
@@ -641,15 +638,11 @@ class MainDialog(QDialog):
 
                         filter_tags = driver.find_elements(By.CSS_SELECTOR, "ytd-search-filter-renderer")
 
+                        # 새 UI 인덱스: 구분(0~4), 길이(5~7), 업로드날짜(8~11)
                         if i == 0 :
-                            search_txt = ud_text
-                            rst_filter_tags = filter_tags[:5]
+                            rst_filter_tags = filter_tags[8:12]  # 업로드 날짜
                         if i == 1 :
-                            search_txt = '동영상'
-                            rst_filter_tags = filter_tags[5:9]
-                        if i == 2 :
-                            search_txt = '4분 미만'
-                            rst_filter_tags = filter_tags[9:12]
+                            rst_filter_tags = filter_tags[5:8]   # 길이
 
                         for rst_filter_tag in rst_filter_tags :
                             current_tag = rst_filter_tag.find_element(By.CSS_SELECTOR, "#label")
