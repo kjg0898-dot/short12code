@@ -660,15 +660,18 @@ class MainDialog(QDialog):
                     time.sleep(5)
 
                     # 유튜브 검색필터 추가 (새로운 UI 구조에 맞게 수정)
-                    # 필터 순서: 업로드날짜(8-11), 우선순위(23-24)
+                    # 필터 순서: 구분(0-4), 업로드날짜(8-11), 우선순위(23-24)
 
                     filter_steps = []
 
-                    # 1. 업로드 날짜 필터 (선택안함이면 스킵)
+                    # 1. Shorts 필터 (항상 적용)
+                    filter_steps.append({'search_txt': 'Shorts 동영상', 'range': (0, 5)})
+
+                    # 2. 업로드 날짜 필터 (선택안함이면 스킵)
                     if udfilter_check_1 == False:
                         filter_steps.append({'search_txt': ud_text, 'range': (8, 12)})
 
-                    # 2. 우선순위 필터 (선택안함이면 스킵)
+                    # 3. 우선순위 필터 (선택안함이면 스킵)
                     if priority_check_0 == False:
                         filter_steps.append({'search_txt': priority_text, 'range': (23, 25)})
 
