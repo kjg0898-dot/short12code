@@ -90,13 +90,6 @@ class MainDialog(QDialog):
         self.gubun_button_group.addButton(self.gubun_btn_2)
         self.gubun_btn_1.setChecked(True)
 
-        # 길이 필터 라디오 버튼 그룹화 (3분 미만/3~20분/20분 초과)
-        self.length_button_group = QButtonGroup(self)
-        self.length_button_group.addButton(self.length_btn_1)
-        self.length_button_group.addButton(self.length_btn_2)
-        self.length_button_group.addButton(self.length_btn_3)
-        self.length_btn_1.setChecked(True)
-
         # 우선순위 필터 라디오 버튼 그룹화 (관련성/인기도)
         self.priority_button_group = QButtonGroup(self)
         self.priority_button_group.addButton(self.priority_btn_1)
@@ -206,20 +199,9 @@ class MainDialog(QDialog):
             except:
                 self.gubun_btn_1.setChecked(True)
 
-            # 길이 필터 로드 (3분 미만/3~20분/20분 초과)
-            try:
-                if lines[15].strip() == "1":
-                    self.length_btn_1.setChecked(True)
-                elif lines[15].strip() == "2":
-                    self.length_btn_2.setChecked(True)
-                elif lines[15].strip() == "3":
-                    self.length_btn_3.setChecked(True)
-            except:
-                self.length_btn_1.setChecked(True)
-
             # 우선순위 필터 로드 (관련성/인기도)
             try:
-                if lines[16].strip() == "True":
+                if lines[15].strip() == "True":
                     self.priority_btn_1.setChecked(True)
                 else:
                     self.priority_btn_2.setChecked(True)
@@ -292,14 +274,6 @@ class MainDialog(QDialog):
         # 구분 필터 (동영상/Shorts 동영상)
         gubun_filter = self.gubun_btn_1.isChecked()
 
-        # 길이 필터 (3분 미만/3~20분/20분 초과)
-        if self.length_btn_1.isChecked():
-            length_filter = "1"
-        elif self.length_btn_2.isChecked():
-            length_filter = "2"
-        else:
-            length_filter = "3"
-
         # 우선순위 필터 (관련성/인기도)
         priority_filter = self.priority_btn_1.isChecked()
 
@@ -320,7 +294,6 @@ class MainDialog(QDialog):
             file.write(str(rd_time_end) + '\n')
             file.write(str(exl_path) + '\n')
             file.write(str(gubun_filter) + '\n')  # 구분 필터
-            file.write(str(length_filter) + '\n')  # 길이 필터
             file.write(str(priority_filter))  # 우선순위 필터
 
         channel_ecp_keywords = self.cnname_except_btn.toPlainText() # 추출 키워드
@@ -508,11 +481,6 @@ class MainDialog(QDialog):
             gubun_check_1 = self.gubun_btn_1.isChecked()  # 동영상
             gubun_check_2 = self.gubun_btn_2.isChecked()  # Shorts 동영상
 
-            # 길이 필터 (3분 미만/3~20분/20분 초과)
-            length_check_1 = self.length_btn_1.isChecked()  # 3분 미만
-            length_check_2 = self.length_btn_2.isChecked()  # 3~20분
-            length_check_3 = self.length_btn_3.isChecked()  # 20분 초과
-
             # 우선순위 필터 (관련성/인기도)
             priority_check_1 = self.priority_btn_1.isChecked()  # 관련성
             priority_check_2 = self.priority_btn_2.isChecked()  # 인기도
@@ -532,14 +500,6 @@ class MainDialog(QDialog):
                 gubun_text = '동영상'
             else:
                 gubun_text = 'Shorts 동영상'
-
-            # 길이 텍스트 설정
-            if length_check_1:
-                length_text = '3분 미만'
-            elif length_check_2:
-                length_text = '3~20분'
-            else:
-                length_text = '20분 초과'
 
             # 우선순위 텍스트 설정
             if priority_check_1:
@@ -722,10 +682,7 @@ class MainDialog(QDialog):
                     # 1. 구분 필터 (동영상/Shorts 동영상)
                     filter_steps.append({'search_txt': gubun_text, 'range': (0, 5)})
 
-                    # 2. 길이 필터 (3분 미만/3~20분/20분 초과)
-                    filter_steps.append({'search_txt': length_text, 'range': (5, 8)})
-
-                    # 3. 업로드 날짜 필터 (선택안함이면 스킵)
+                    # 2. 업로드 날짜 필터 (선택안함이면 스킵)
                     if udfilter_check_1 == False:
                         filter_steps.append({'search_txt': ud_text, 'range': (8, 12)})
 
