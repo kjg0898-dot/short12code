@@ -52,9 +52,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UI_PATH = "youtube1.1.ui"
 
 save_date = datetime.today().strftime("%Y%m%d_%H%M")
-favicon_image = program_directory + "\\data\icon-16x16.png"
-yj_image = program_directory + "\data\icon.png"
-exl_sample = program_directory + "\data\\result_sample.xlsx"
+favicon_image = program_directory + "\\data\\icon-16x16.png"
+yj_image = program_directory + "\\data\\icon.png"
+exl_sample = program_directory + "\\data\\result_sample.xlsx"
 scriptidx_file = program_directory + f"\\data\\scriptidx.ini"
 setting_file_1 = program_directory + f"\\data\\setting_1.ini"
 setting_file_2 = program_directory + f"\\data\\setting_2.ini"
