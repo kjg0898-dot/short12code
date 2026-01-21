@@ -679,9 +679,6 @@ class MainDialog(QDialog):
                             links = links.split('&')
                             link = 'https://www.youtube.com' + links[0]
 
-                            if 'shorts' not in link :
-                                continue
-
                             if link in except_link :
                                 continue
 
